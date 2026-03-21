@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VendorScout | TinyFish Procurement Agent</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="page-bg">
+      <div class="orb orb-one"></div>
+      <div class="orb orb-two"></div>
+      <div class="grid-mask"></div>
+    </div>
+
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark">VS</div>
+          <div>
+            <p class="brand-kicker">Live vendor tracker</p>
+            <h1>VendorScout</h1>
+          </div>
+        </div>
+        <div class="topbar-meta">
+          <span class="meta-pill">Price compare</span>
+          <span class="meta-pill">Stock check</span>
+          <span class="meta-pill">CSV export</span>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div class="hero-copy panel">
+          <p class="eyebrow">Compare live vendor listings</p>
+          <h2 class="hero-title">Check multiple vendor sites in one place.</h2>
+          <p class="lede">
+            I built VendorScout to make product checks less annoying. It opens each vendor site, looks for the
+            product, and brings the useful details back into one board so I do not have to keep flipping between tabs.
+          </p>
+
+          <div class="hero-stats">
+            <article class="stat-card">
+              <span class="stat-number">2+</span>
+              <span class="stat-label">Sites checked per run</span>
+            </article>
+            <article class="stat-card">
+              <span class="stat-number">1</span>
+              <span class="stat-label">Best match highlighted</span>
+            </article>
+            <article class="stat-card">
+              <span class="stat-number">CSV</span>
+              <span class="stat-label">Export for notes</span>
+            </article>
+          </div>
+        </div>
+
+        <aside class="hero-rail panel">
+          <div class="rail-head">
+            <p class="rail-kicker">Quick workflow</p>
+            <h3>How it works</h3>
+          </div>
+
+          <div class="rail-steps">
+            <div class="rail-step">
+              <span class="step-index">01</span>
+              <div>
+                <strong>Pick a product</strong>
+                <p>Enter the item name and the sites you want to check.</p>
+              </div>
+            </div>
+            <div class="rail-step">
+              <span class="step-index">02</span>
+              <div>
+                <strong>Run the scan</strong>
+                <p>Each site is checked separately so you can see progress as results come in.</p>
+              </div>
+            </div>
+            <div class="rail-step">
+              <span class="step-index">03</span>
+              <div>
+                <strong>Compare the results</strong>
+                <p>Use the board to compare price, stock, and a few useful notes side by side.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <main class="main-grid">
+        <section class="panel form-panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Run setup</p>
+              <h3>Run a live vendor sweep</h3>
+            </div>
+            <button id="fill-demo" class="ghost-button" type="button">Load demo inputs</button>
+          </div>
+
+          <form id="run-form">
+            <label>
+              Product or SKU
+              <input id="product-query" name="product_query" placeholder="Sony WH-1000XM5" required>
+            </label>
+
+            <div class="preset-section">
+              <div class="preset-head">
+                <div>
+                  <span class="preset-label">Site presets</span>
+                  <h4>Enable the sites you want to scan</h4>
+                </div>
+                <div class="preset-actions">
+                  <button id="select-popular" class="ghost-button" type="button">Popular</button>
+                  <button id="select-electronics" class="ghost-button" type="button">Electronics</button>
+                  <button id="clear-sites" class="ghost-button" type="button">Clear</button>
+                </div>
+              </div>
+
+              <p id="preset-count" class="preset-count">0 sites selected</p>
+              <div id="site-presets" class="site-presets"></div>
+            </div>
+
+            <label>
+              Custom vendor URLs (optional)
+              <textarea
+                id="vendor-urls"
+                name="vendor_urls"
+                rows="4"
+                placeholder="Paste extra sites here if they are not in the preset list."
+              ></textarea>
+            </label>
+
+            <div class="inline-fields">
+              <label>
+                Browser profile
+                <select id="browser-profile" name="browser_profile">
+                  <option value="lite" selected>lite</option>
+                  <option value="stealth">stealth</option>
+                </select>
+              </label>
+
+              <label>
+                Proxy country code
+                <input id="country-code" name="country_code" placeholder="US">
+              </label>
+            </div>
+
+            <label>
+              Buyer notes
+              <textarea
+                id="notes"
+                name="notes"
+                rows="3"
+                placeholder="Prefer in-stock offers and mention shipping timing if visible."
+              ></textarea>
+            </label>
+
+            <div class="form-actions">
+              <button id="submit-button" class="primary-button" type="submit">Start vendor scan</button>
+              <p id="form-message" class="form-message" role="status"></p>
+            </div>
+          </form>
+
+          <div class="helper-strip">
+            <div class="helper-card">
+              <span class="helper-label">Tip</span>
+              <p>For a quick test, start with 1 site, a specific product name, lite mode, and no proxy.</p>
+            </div>
+            <div class="helper-card">
+              <span class="helper-label">Why I built it</span>
+              <p>This is mainly for quickly checking the same product across different vendor sites.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel results-panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Results</p>
+              <h3>Live comparison</h3>
+            </div>
+            <button id="export-button" class="ghost-button" type="button" disabled>Export CSV</button>
+          </div>
+
+          <div id="summary-strip" class="summary-strip hidden"></div>
+
+          <section id="lead-card" class="lead-card hidden">
+            <div>
+              <p class="lead-kicker">Best current match</p>
+              <h4 id="lead-title">Waiting for the first completed result</h4>
+              <p id="lead-copy">As each site finishes, the strongest result will show up here first.</p>
+            </div>
+            <div class="lead-price-block">
+              <span class="lead-price-label">Best live price</span>
+              <strong id="lead-price">Pending</strong>
+            </div>
+          </section>
+
+          <div id="empty-state" class="empty-state">
+            <h4>No active run yet</h4>
+            <p>Start a scan to compare a few vendor sites without manually checking each one yourself.</p>
+          </div>
+
+          <div id="results-grid" class="results-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="result-card-template">
+      <article class="result-card">
+        <div class="result-accent"></div>
+        <div class="card-top">
+          <div class="vendor-block">
+            <p class="vendor-name"></p>
+            <a class="site-link" target="_blank" rel="noreferrer"></a>
+          </div>
+          <span class="status-badge"></span>
+        </div>
+
+        <div class="price-row">
+          <p class="price-value">Pending</p>
+          <p class="availability"></p>
+        </div>
+
+        <p class="match-name"></p>
+        <a class="matched-link hidden" target="_blank" rel="noreferrer">Open matched listing</a>
+        <p class="notes"></p>
+
+        <div class="meta-grid">
+          <div>
+            <span class="meta-label">Confidence</span>
+            <span class="confidence"></span>
+          </div>
+          <div>
+            <span class="meta-label">Shipping</span>
+            <span class="shipping"></span>
+          </div>
+          <div>
+            <span class="meta-label">Currency</span>
+            <span class="currency"></span>
+          </div>
+          <div>
+            <span class="meta-label">Returns</span>
+            <span class="returns"></span>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
